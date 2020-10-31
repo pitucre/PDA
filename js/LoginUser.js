@@ -109,7 +109,7 @@ var db;
 			// console.log("test");
 			var logn = mui("#account")[0].value;
 			var pss = mui("#password")[0].value;
-			var md5_pass=md5(pss);
+			var md5_pass= (md5(pss)).toUpperCase();
 			// md5()
 			console.log(md5_pass);
 			if (OnCheckUser()) {
@@ -130,6 +130,26 @@ var db;
 										var result = evt.target.result;					
 										console.log(result);
 										console.log(result.indexOf(mui("#account")[0].value));
+										if(result.indexOf(logn)<0)
+										{
+											alert("用户"+logn+"没有权限!");
+										}
+										else 
+										{
+											if(result.indexOf(md5_pass)<0){
+												alert("密码不正确！")
+											}
+											else{
+												if(result.indexOf(logn)+logn.length+1==result.indexOf(md5_pass))
+												{
+													window.location.replace("Main.html");
+												}
+												else{
+													alert("用户不存在或者密码不正确!!");
+												}
+											}
+											
+										}
 									}
 									
 								}
