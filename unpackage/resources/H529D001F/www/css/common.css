@@ -1,0 +1,51 @@
+.button {
+	font-size: 18px;
+	font-weight: normal;
+	text-decoration: none;
+	display: block;
+	text-align: center;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	color: #FFF;
+	background-color: #FFCC33;
+	border: 1px solid #ECB100;
+	padding: .5em 0em;
+	margin: .5em .7em;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+.button-waring {
+	color: #666;
+	background-color: #ebebeb;
+	border-color: #e0e0e0;
+}
+.dlist {
+	padding: 0px;
+	margin: 1em;
+	background: #fff;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.ditem {
+	overflow: hidden;
+	list-style-type: none;
+	font-size: 1em;
+	padding: 1em;
+	border-bottom: inset 1px #ebebeb;
+	vertical-align: middle;
+}
+
+.ditem-empty {
+	overflow: hidden;
+	list-style-type: none;
+	font-size: 1em;
+	padding: 1em;
+	vertical-align: middle;
+}
+.dcontent {
+	text-align: center;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}

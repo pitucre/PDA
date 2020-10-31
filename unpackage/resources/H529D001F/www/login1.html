@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+	</head>
+
+	<body>
+
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<button id="btnAdd" type="button" class="mui-btn mui-btn-primary">保存</button>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<button id="btnRed" type="button" class="mui-btn mui-btn-primary">读取</button>
+			</div>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+
+	<script>
+		var _read = mui("#btnRed")[0];
+		_read.addEventListener("tap", function() {
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fs.root.getFile('_doc/r.txt', {
+					create: true
+				}, function(fileEntry) {
+					fileEntry.file(function(file) {
+						var fileReader = new plus.io.FileReader();
+						fileReader.readAsText(file, 'utf-8');
+						fileReader.onloadend = function(evt) {
+							var result = evt.target.result;
+								mui.alert(result);
+						}
+					});
+				});
+			}, function(e) {
+					mui.alert(e.message);
+			});
+		});
+
+		var _import = mui("#btnAdd")[0];
+		_import.addEventListener("tap", function() {
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fs.root.getFile('r.txt', {
+					create: true
+				}, function(fileEntry) {
+					fileEntry.createWriter(function(writer) {
+						writer.onwrite = function(e) {
+							console.log("Write data success!");
+						};
+						var data = JSON.stringify("[{'Name':'San'},{'Name':'Si'}]");
+						try {
+							writer.seek(writer.length);
+						} catch(e) {
+							console.log("file doesn't exist!");
+						}
+						writer.write(data);
+							mui.alert("保存数据成功！");
+
+					}, function(e) {
+							mui.alert(e.message);
+					});
+				});
+			}, function(e) {
+					mui.alert(e.message);
+			});
+		});
+	</script>
+
+</html>

@@ -1,0 +1,15 @@
+ul {
+	font-size: 14px;
+	color: #8f8f94;
+}
+
+.mui-btn {
+	padding: 10px;
+}
+
+.mui-toast-container {
+	bottom: 60% !important;
+}
+.mui-toast-message {
+	font-size:18pt;
+}

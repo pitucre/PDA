@@ -1,0 +1,73 @@
+/**
+ * @Description手机APP应用程序
+ * @Date日期(Create Time)：2019.01.24
+ *@Author: lbj
+ */
+
+<!DOCTYPE html>
+<html>
+
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>主菜单</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/iconfont.css" rel="stylesheet" />
+		<link href="css/main.css" rel="stylesheet" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav" style="padding-right: 15px;">
+			<h1 class="mui-title"><label id="lblTitle">浦林成山</label></h1>
+			<a href="ChangePassword.html">
+				<lable class="mui-pull-right mui-btn-link">设置</lable>
+			</a>
+		</header>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">操作列表</h1>
+		</header>
+		<div class="mui-content">
+
+			<ul class="mui-table-view mui-grid-view mui-grid-9" id="Menu">
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="Menu/Download.html">
+						<img class="mui-media-object" src="./images/download.jpg">
+						<div class="mui-media-body">下载资产列表</div>
+					</a></li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="Menu/FixedAssetInventory.html">
+						<img class="mui-media-object" src="./images/AssetInventory.jpg">
+						<div class="mui-media-body">进行资产盘点</div>
+					</a></li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6" id="liUpload">
+					<!-- 		<a href="Menu/Upload.html" onclick="createUpload()"> -->
+					<img class="mui-media-object" src="./images/Upload.jpg">
+					<div class="mui-media-body">上传盘点结果</div>
+					<!-- <button id="btnUpLoad">上传盘点结果</button> -->
+					<!-- </a> -->
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="login.html">
+						<img class="mui-media-object" src="./images/Exit.jpg">
+						<div class="mui-media-body">退出</div>
+					</a></li>
+			</ul>
+		</div>
+		<br />
+		<br />
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item" href="#" id="exit">
+				<span class="mui-icon mui-icon mui-icon-close"></span>
+				<span class="mui-tab-label"><label id="lblBack">退出</label></span>
+			</a>
+		</nav>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/iconfont.js"></script>
+	<script src="js/utilComm.js"></script>
+	<script src="js/Main.js"></script>
+	<!-- <script src="js/Language.js"></script> -->
+
+</html>
