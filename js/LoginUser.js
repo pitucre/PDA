@@ -23,44 +23,69 @@ var db;
 			var wifiInfo = wifiManager.getConnectionInfo();
 			mac = wifiInfo.getMacAddress();
 			mac = mac.replace(/:/gi, "").toUpperCase();
+			console.log(mac);
 		}
-		if ("020000000000" == mac) {
-			mac = plus.device.imei.toUpperCase();
-		}
+		// if ("020000000000" == mac) {
+		// 	mac = plus.device.imei.toUpperCase();
+		// }
 		storage["MAC"] = mac;
 		//
 		var vers = "";
+		mui.getJSON("manifest.json", null, function(dt) {
+
+			vers = dt.version.name;
+			console.log(vers);
+			mui("#lblVer")[0].innerText = dt.version.name;
+			if (dt.developer.name == "lbj") {
+
+			} else {
+				mui.alert("开发者密匙错误！");
+			}
+		});
 		mui("#lblEquipID")[0].innerText = storage["MAC"];
+		// console.log(mac);
+		console.log(requestPath);
 		mui.ajax(requestPath + "/ashx/Login.ashx", {
 			data: {
-				action: "update",
-				lang: "CHN"
+				action: "update"
+				// ,
+				// lang: "CHN"
 			},
 			dataType: "json",
 			type: "post",
 			timeout: 100000,
 			success: function(data) {
+
 				mui.getJSON("manifest.json", null, function(dt) {
+
 					vers = dt.version.name;
+					console.log(vers);
 					mui("#lblVer")[0].innerText = dt.version.name;
 					if (dt.developer.name == "lbj") {
 						if (data.version != vers) {
+							console.log(data.version);
 							var wgtWaiting = plus.nativeUI.showWaiting("Download File...");
 							var task = plus.downloader.createDownload(data.url, {
 								filename: "_downloads/"
 							}, function(d, status) {
 								if (status == 200) {
+									var fileSaveUrl = plus.io.convertLocalFileSystemURL(d.filename);
+									// console.log(fileSaveUrl);
+									// plus.runtime.openFile(d.filename);
 									plus.runtime.install(d.filename, {}, function() {}, function(e) {
 										plus.nativeUI.closeWaiting();
 										plus.nativeUI.alert("安装apk文件失败[" + e.code + "]：" + e.message);
+										// plus.nativeUI.alert("安装apk文件失败[" + d.filename + "]：");
 									});
 								} else {
-									mui.alert("下载失败！");
+									mui.alert("下载失败!!");
 								}
 								wgtWaiting.close();
 							});
 							task.addEventListener("statechanged", function(download, status) {
+								// console.log(download.state);
 								switch (download.state) {
+
 									case 2:
 										break;
 									case 3:
@@ -70,6 +95,13 @@ var db;
 										}, 0);
 										break;
 									case 4:
+										// mui.toast("下载完成！")                
+										// console.log(task.totalSize)
+										// plus.io.resolveLocalFileSystemURL(task.filename, function(entry) {
+										// 	// alert(entry.toLocalURL()+"")  // 显示下载的文件存储绝对地址
+										// 	// console.log(entry.toLocalURL())     //绝对地址                                      
+										// });
+										// alert(task.filename)  // 显示下载好的文件名称
 										break;
 								}
 							});
@@ -109,7 +141,7 @@ var db;
 			// console.log("test");
 			var logn = mui("#account")[0].value;
 			var pss = mui("#password")[0].value;
-			var md5_pass= (md5(pss)).toUpperCase();
+			var md5_pass = (md5(pss)).toUpperCase();
 			// md5()
 			console.log(md5_pass);
 			if (OnCheckUser()) {
@@ -127,40 +159,36 @@ var db;
 								if (entry.isFile) {
 									fileReader.readAsText(entry, "utf-8");
 									fileReader.onloadend = function(evt) {
-										var result = evt.target.result;					
+										var result = evt.target.result;
 										console.log(result);
 										console.log(result.indexOf(mui("#account")[0].value));
-										if(result.indexOf(logn)<0)
-										{
-											alert("用户"+logn+"没有权限!");
-										}
-										else 
-										{
-											if(result.indexOf(md5_pass)<0){
+										if (result.indexOf(logn) < 0) {
+											alert("用户" + logn + "没有权限!");
+										} else {
+											if (result.indexOf(md5_pass) < 0) {
 												alert("密码不正确！")
-											}
-											else{
-												if(result.indexOf(logn)+logn.length+1==result.indexOf(md5_pass))
-												{
+											} else {
+												if (result.indexOf(logn) + logn.length + 1 == result.indexOf(md5_pass)) {
 													window.location.replace("Main.html");
-												}
-												else{
+												} else {
 													alert("用户不存在或者密码不正确!!");
 												}
 											}
-											
+
 										}
 									}
-									
+
 								}
-					
+
 							},
-							function(e) {alert(e.message);}
+							function(e) {
+								alert(e.message);
+							}
 						)
 					}, function(e) {
 						alert("Request file system failed: " + e.message);
 					});
-					
+
 				} else {
 					/*	
 							mui.ajax(requestPath + "/ashx/Login.ashx", {
@@ -202,7 +230,7 @@ var db;
 								}
 							});
 					*/
-				
+
 				}
 
 			}
@@ -220,20 +248,6 @@ function OnCheckUser() {
 		mui.alert("请录入密码信息！");
 		return false;
 	}
-	// mui.alert(mui("#txtModel")[0].value);
-	// if("" == mui("#txtfac")[0].value || "undefined" == mui("#txtfac")[0].value) {
-	// 	mui.alert("请选择工厂！");
-	// 	return true;
-	// }
-	// if("" == mui("#txtModel")[0].value || "undefined" == mui("#txtModel")[0].value) {
-	// 	mui("#txtModel")[0].innerText = "联网";
-	// 	return true;
-	// }
-	// storage.setItem("Network",mui("#txtModel")[0].value.toString());
-	// mui("#txtModel")[0].Text = storage.getItem("Network");
-	// mui.alert(storage.getItem("Network"));
-	// mui.get('../../statics/UserPasswordInfo.txt', function(data) {
-	//         mui.alert("获取数据为："+(data));
-	//     }, 'txt');
+
 	return true;
 };
