@@ -50,7 +50,8 @@ var JQ = jQuery.noConflict();
 							// myStorage=plus.storage;
 							var barcodeJsonStr = myStorage.getItem(_selBARCODE.value);
 							console.log(barcodeJsonStr);
-							if (barcodeJsonStr.length == 0) {
+							if (barcodeJsonStr == null) {
+								mui("#selBARCODE")[0].value = "";
 								mui.alert("不存在此条形码！");
 							} else {
 								ScanBarcode = JSON.parse(barcodeJsonStr);
@@ -199,7 +200,7 @@ var JQ = jQuery.noConflict();
 						var month = myDate.getMonth() + 1;
 
 						//获取当前日
-						var day = myDate.getDate();
+						var day = myDate.getDay();
 						var h = myDate.getHours(); //获取当前小时数(0-23)
 						var m = myDate.getMinutes(); //获取当前分钟数(0-59)
 						var s = myDate.getSeconds();
@@ -364,6 +365,7 @@ function OnCheckText() {
 
 function OnCleanText() {
 	JQ("#dList tr:gt(0)").remove();
+	// mui("#selBARCODE")[0].value = "";
 	mui("#txtAssetBarcode")[0].value = "";
 	mui("#txtAssetCode")[0].value = "";
 	mui("#txtAssetName")[0].value = "";

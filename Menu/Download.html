@@ -79,6 +79,7 @@
 		<!--<script src="../js/mui.picker.min.js"></script>-->
 		<script src="../js/mui.picker.js"></script>
 		<script src="../js/mystorage.js"></script>
+		<!-- <script src="../js/utilComm.js"></script> -->
 		<script>
 			(function($, doc) {
 				$.init();
@@ -88,137 +89,184 @@
 				$.ready(function() {
 
 				});
+
+
 				var requestPath = "http://10.151.82.130:8020"; /*测试服务*/
+				console.log(requestPath);
 				var _btnDownload = mui("#btnDownload")[0];
 				_btnDownload.addEventListener("tap", function() {
-					mui("#progressbar1").progressbar({
-						progress: 0
-					}).show();
-					// mui.alert(mui("#txtDepartment")[0].value);
-					mui.ajax(requestPath + "/ashx/FixedAssetInfo.ashx", {
-						data: {
-							ln: mui("#txtDepartment")[0].value,
-							test: "0",
-							action: "downloadjson",
-							// Token: storage["Token"],
 
-						},
-						dataType: "json",
-						type: "post",
-						async: false,
-						timeout: 200000,
-						success: function(data) {
-							// mui.alert("开始下载数据！");
-							plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
-								console.log(fs.root.fullPath);
-								// fs.root是根目录操作对象DirectoryEntry
-								fs.root.getFile('FixedAssetInfo.txt', {
-									create: true
-								}, function(fileEntry) {
-									// fileEntry.remove();
+					if (plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+						mui.alert("请检查网络是否正常连接！", "NetWorkError");
+					} else {
+						mui("#progressbar1").progressbar({
+							progress: 0
+						}).show();
+						// mui.alert(mui("#txtDepartment")[0].value);
+						mui.ajax(requestPath + "/ashx/FixedAssetInfo.ashx", {
+							data: {
+								ln: mui("#txtDepartment")[0].value,
+								test: "0",
+								action: "downloadjson",
+								// Token: storage["Token"],
 
-									fileEntry.createWriter(function(writer) {
-										var wt = plus.nativeUI.showWaiting("正在下载固定资产列表，请等待!", 'color="#ffff11"');
-										writer.onwrite = function(e) {
-											console.log("Write data success!");
-										};
-										try {
-											// writer.seek(writer.length);										
-											writer.seek(0); //从头开始输入
-											// mui.alert(data["TL"]);
-											//截取有用的字符串
-											// console.log("test");
-											render = JSON.stringify(data.TL);
-											if (render.length == 0) {
-												mui.alert("不存在符合下载条件的资产");
-												return;
-											}
-											//转换为json字符串
-											var json = JSON.parse(render);
+							},
+							dataType: "json",
+							type: "post",
+							async: false,
+							timeout: 200000,
+							success: function(data) {
+								var nowYear = new Date().getFullYear();
+								var nowMonth = new Date().getMonth() + 1;
+								var nowDay = new Date().getDate();
+								var nowHour = new Date().getHours("HH");
+								// new Date().geth
+								var now = nowYear + "" + appendZero(nowMonth) + "" + appendZero(nowDay) + "" + appendZero(nowHour);
+								// now=new Date().Format("yyyyMMddHH");
+								var sDate = "";
+								console.log(requestPath);
 
-											//查找对应键值对，所对应的另一个字符串
-											// console.log(getItem(json, "BARCODE", "830000100").ASSETCODE);
-											// console.log(data);		
-											// console.log(render);
-											// console.log(render.length);
-											// console.log(json);
-											// console.log(json.length);
-											// myStorage=plus.storage;
-											myStorage.clear();
-											for (key in json) {
-
-												// console.log(key+':'+json[key].BARCODE+":"+JSON.stringify(json[key]));
-												myStorage.setItem(json[key].BARCODE, JSON.stringify(json[key]));
-												// console.log(myStorage.getItem(json[key].BARCODE));
-												// break;
-											}
-
-											console.log(myStorage.getLength());
-											// console.log(myStorage.getLengthPlus());
-											// mui.alert(render);
-											// var col = [];
-											// for (var i = 0; i < render.length; i++) {
-											// 	for (var key in render[i]) {
-											// 		if (col.indexOf(key) === -1) {
-											// 			col.push(key);
-											// 		}
-											// 	}
-											// }
-											// // console.log(col);
-											// //create a table
-											// var table = document.createElement("table");
-											// var tr = table.insertRow(-1); // TABLE ROW.
-
-											// for (var i = 0; i < col.length; i++) {
-											// 	var th = document.createElement("th"); // TABLE HEADER.
-											// 	th.innerHTML = col[i];
-											// 	tr.appendChild(th);
-											// }
-
-											// // ADD JSON DATA TO THE TABLE AS ROWS.
-											// for (var i = 0; i < render.length; i++) {
-
-											// 	tr = table.insertRow(-1);
-											// 	for (var j = 0; j < col.length; j++) {
-											// 		var tabCell = tr.insertCell(-1);
-											// 		tabCell.innerHTML = render[i][col[j]];
-											// 	}
-
-											// }
-
-											// // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-											// var divContainer = document.getElementById("viewport");
-											// divContainer.innerHTML = "";
-											// divContainer.appendChild(table);
-
-											// mui.alert(render);
-											// writer.INIT();
-											// writer.truncate(0);
-											// writer.write(render);
-											writer.write(render);
-
-											//进度条
-											mui("#progressbar1").progressbar({
-												progress: 100
-											}).show();
-											wt.close();
-											mui.alert("下载数据成功！");
-										} catch (e) {
-											console.log(e.message + "文件下载失败，请重新下载。");
-											wt.close();
+								mui.ajax(requestPath + "/ashx/Login.ashx", {
+									data: {
+										action: "update"
+									},
+									dataType: "json",
+									type: "post",
+									timeout: 10000,
+									success: function(data1) {
+										sDate = data1.DateTime;
+										// console.log(now);
+										console.log(sDate);
+										if (sDate == now) {
+											// mui.alert("开始下载数据！");
+											plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
+												// console.log(fs.root.fullPath);
+												// fs.root是根目录操作对象DirectoryEntry
+												fs.root.getFile('FixedAssetInfo.txt', {
+													create: true
+												}, function(fileEntry) {
+													// fileEntry.remove();										
+													fileEntry.createWriter(function(writer) {
+														var wt = plus.nativeUI.showWaiting("正在下载固定资产列表，请等待!", 'color="#ffff11"');
+														writer.onwrite = function(e) {
+															console.log("Write data success!");
+														};
+														try {
+															// writer.seek(writer.length);										
+															writer.seek(0); //从头开始输入
+															// mui.alert(data["TL"]);
+															//截取有用的字符串
+															// console.log("test");
+															render = JSON.stringify(data.TL);
+															// console.log(render);
+															// if (render == undefined) {
+															// 	mui.alert("无法获取信息，请检查服务端！");
+															// 	return;
+															// }
+															if (render.length == 0) {
+																mui.alert("不存在符合下载条件的资产");
+																return;
+															}
+											
+															//转换为json字符串
+															var json = JSON.parse(render);
+											
+															//查找对应键值对，所对应的另一个字符串
+															// console.log(getItem(json, "BARCODE", "830000100").ASSETCODE);
+															// console.log(data);		
+															// console.log(render);
+															// console.log(render.length);
+															// console.log(json);
+															// console.log(json.length);
+															// myStorage=plus.storage;
+															myStorage.clear();
+															for (key in json) {
+											
+																// console.log(key+':'+json[key].BARCODE+":"+JSON.stringify(json[key]));
+																myStorage.setItem(json[key].BARCODE, JSON.stringify(json[key]));
+																// console.log(myStorage.getItem(json[key].BARCODE));
+																// break;
+															}
+											
+															console.log(myStorage.getLength());
+															// console.log(myStorage.getLengthPlus());
+															// mui.alert(render);
+															// var col = [];
+															// for (var i = 0; i < render.length; i++) {
+															// 	for (var key in render[i]) {
+															// 		if (col.indexOf(key) === -1) {
+															// 			col.push(key);
+															// 		}
+															// 	}
+															// }
+															// // console.log(col);
+															// //create a table
+															// var table = document.createElement("table");
+															// var tr = table.insertRow(-1); // TABLE ROW.
+											
+															// for (var i = 0; i < col.length; i++) {
+															// 	var th = document.createElement("th"); // TABLE HEADER.
+															// 	th.innerHTML = col[i];
+															// 	tr.appendChild(th);
+															// }
+											
+															// // ADD JSON DATA TO THE TABLE AS ROWS.
+															// for (var i = 0; i < render.length; i++) {
+											
+															// 	tr = table.insertRow(-1);
+															// 	for (var j = 0; j < col.length; j++) {
+															// 		var tabCell = tr.insertCell(-1);
+															// 		tabCell.innerHTML = render[i][col[j]];
+															// 	}
+											
+															// }
+											
+															// // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+															// var divContainer = document.getElementById("viewport");
+															// divContainer.innerHTML = "";
+															// divContainer.appendChild(table);
+											
+															// mui.alert(render);
+															// writer.INIT();
+															// writer.truncate(0);
+															// writer.write(render);
+															writer.write(render);
+											
+															//进度条
+															mui("#progressbar1").progressbar({
+																progress: 100
+															}).show();
+															wt.close();
+															mui.alert("下载数据成功！");
+														} catch (e) {
+															console.log(e.message + "文件下载失败，请重新下载。");
+															wt.close();
+														}
+													}, function(e) {
+														mui.alert(e.message);
+													});
+												});
+											}, function(e) {
+												mui.alert(e.message);
+											});
+											
+										} else {
+											alert("本地时间跟服务器时间不一致，请调整本地时间后再下载！");
 										}
-									}, function(e) {
-										mui.alert(e.message);
-									});
+									},
+									error: function(XMLHttpRequest, textStatus, errorThrown) {
+										mui.alert(errorThrown, "SystemError");
+									}
 								});
-							}, function(e) {
-								mui.alert(e.message);
-							});
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown) {
-							mui.alert(errorThrown, "SystemError");
-						}
-					});
+							
+							},
+							error: function(XMLHttpRequest, textStatus, errorThrown) {
+								mui.alert(errorThrown, "SystemError");
+							}
+						});
+
+					}
+
 				}, false);
 
 
@@ -229,6 +277,11 @@
 				for (var i = 0; i < arr.length; i++)
 					if (arr[i][n] == v)
 						return arr[i];
+			}
+
+			function appendZero(obj) {
+				if (obj < 10) return "0" + "" + obj;
+				else return obj;
 			}
 		</script>
 	</body>

@@ -61,55 +61,57 @@ var db;
 					vers = dt.version.name;
 					console.log(vers);
 					mui("#lblVer")[0].innerText = dt.version.name;
-					if (dt.developer.name == "lbj") {
-						if (data.version != vers) {
-							console.log(data.version);
-							var wgtWaiting = plus.nativeUI.showWaiting("Download File...");
-							var task = plus.downloader.createDownload(data.url, {
-								filename: "_downloads/"
-							}, function(d, status) {
-								if (status == 200) {
-									var fileSaveUrl = plus.io.convertLocalFileSystemURL(d.filename);
-									// console.log(fileSaveUrl);
-									// plus.runtime.openFile(d.filename);
-									plus.runtime.install(d.filename, {}, function() {}, function(e) {
-										plus.nativeUI.closeWaiting();
-										plus.nativeUI.alert("安装apk文件失败[" + e.code + "]：" + e.message);
-										// plus.nativeUI.alert("安装apk文件失败[" + d.filename + "]：");
-									});
-								} else {
-									mui.alert("下载失败!!");
-								}
-								wgtWaiting.close();
-							});
-							task.addEventListener("statechanged", function(download, status) {
-								// console.log(download.state);
-								switch (download.state) {
+					// var nowYear = new Date().getFullYear();
+					// var nowMonth = new Date().getMonth()+1;
+					// var nowDay = new Date().getDay();
+					// var nowHour = new Date().getHours();					
+					// console.log(nowYear+""+nowMonth+""+nowDay+""+nowHour);
+					if (data.version != vers) {
+						console.log(data.version);
+						var wgtWaiting = plus.nativeUI.showWaiting("Download File...");
+						var task = plus.downloader.createDownload(data.url, {
+							filename: "_downloads/"
+						}, function(d, status) {
+							if (status == 200) {
+								var fileSaveUrl = plus.io.convertLocalFileSystemURL(d.filename);
+								// console.log(fileSaveUrl);
+								// plus.runtime.openFile(d.filename);
+								plus.runtime.install(d.filename, {}, function() {}, function(e) {
+									plus.nativeUI.closeWaiting();
+									plus.nativeUI.alert("安装apk文件失败[" + e.code + "]：" + e.message);
+									// plus.nativeUI.alert("安装apk文件失败[" + d.filename + "]：");
+								});
+							} else {
+								mui.alert("下载失败!!");
+							}
+							wgtWaiting.close();
+						});
+						task.addEventListener("statechanged", function(download, status) {
+							// console.log(download.state);
+							switch (download.state) {
 
-									case 2:
-										break;
-									case 3:
-										setTimeout(function() {
-											var percent = download.downloadedSize / download.totalSize * 100;
-											wgtWaiting.setTitle("已下载 " + parseInt(percent) + "%");
-										}, 0);
-										break;
-									case 4:
-										// mui.toast("下载完成！")                
-										// console.log(task.totalSize)
-										// plus.io.resolveLocalFileSystemURL(task.filename, function(entry) {
-										// 	// alert(entry.toLocalURL()+"")  // 显示下载的文件存储绝对地址
-										// 	// console.log(entry.toLocalURL())     //绝对地址                                      
-										// });
-										// alert(task.filename)  // 显示下载好的文件名称
-										break;
-								}
-							});
-							task.start();
-						}
-					} else {
-						mui.alert("开发者密匙错误！");
+								case 2:
+									break;
+								case 3:
+									setTimeout(function() {
+										var percent = download.downloadedSize / download.totalSize * 100;
+										wgtWaiting.setTitle("已下载 " + parseInt(percent) + "%");
+									}, 0);
+									break;
+								case 4:
+									// mui.toast("下载完成！")                
+									// console.log(task.totalSize)
+									// plus.io.resolveLocalFileSystemURL(task.filename, function(entry) {
+									// 	// alert(entry.toLocalURL()+"")  // 显示下载的文件存储绝对地址
+									// 	// console.log(entry.toLocalURL())     //绝对地址                                      
+									// });
+									// alert(task.filename)  // 显示下载好的文件名称
+									break;
+							}
+						});
+						task.start();
 					}
+
 				});
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {

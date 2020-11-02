@@ -52,6 +52,7 @@ function CheckLotIdLengthClick(_Code) {
 	}
 };
 var requestPath = "http://10.151.82.130:8020"; /*测试服务*/
+var requestPath = "http://192.168.2.156"; /*测试服务*/
 // var requestPath = "http://test.com:80"; /*测试服务*//*  */
 //var requestPath = "http://10.168.66.30:8020";/*国内服务*/
 //var requestPath = "http://10.169.12.11:8020";/*泰国服务*/

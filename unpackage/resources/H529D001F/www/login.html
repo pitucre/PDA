@@ -21,19 +21,19 @@
 		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
 	</head>
 
-	<body style="background-image: url(images/login.jpg);background-size:cover;">
-	
+	<body>
+
 		<header class="mui-bar mui-bar-nav">
 			<h1 class="mui-title"><label id=lblTitle>浦林成山固定资产盘点系统</label></h1>
 		</header>
-			
+
 		<div class="mui-content">
 			<div class="link-area">
-				<img src="images/login.jpg" style="width: 160px;size: transparent;" />
+				<img src="images/mark.png" style="width: 160px;size: transparent;" />
 			</div>
 			<div class="mui-content">
 				<form id='login-form' class="mui-input-group">
-<!-- 					<div class="mui-input-row" hidden="true">
+					<!-- 					<div class="mui-input-row" hidden="true">
 						<label id="lblLanguage">语言</label>
 						<select type="text" id="txtLanguage" class="mui-input">
 							<option value="CHN" selected="selected">中文🇨🇳</option>
@@ -43,15 +43,15 @@
 					</div> -->
 					<div class="mui-input-row">
 						<label id="lblAccount">账号</label>
-						<input id='account' type="text" class="mui-input" placeholder="请录入..." />
+						<input id='account' type="text" class="mui-input" placeholder="请录入..." value="lybi" />
 					</div>
 					<div class="mui-input-row">
 						<label id="lblPassword">密码</label>
-						<input id='password' type="password" class="mui-input" placeholder="请录入..." />
+						<input id='password' type="password" class="mui-input" placeholder="请录入..." value="50807484" />
 					</div>
 
 
-					<div class="mui-input-row">
+					<div class="mui-input-row" hidden="">
 						<label id="lblModel">模式</label>
 						<select type="text" id="txtModel" class="mui-input">
 							<option value="Online" selected="selected">联网</option>
@@ -66,17 +66,71 @@
 						<label id="lblCompany">浦林成山(山东)轮胎有限公司 </label><br />Ver : <span id="lblVer"></span><br />
 						Server : <span id="lblServe"></span><br />
 						EquipID : <span id="lblEquipID"></span>
+						EquipID : <span id="lblEquipID"></span>
 					</div>
-
+					<div style="padding: 20px;">
+						<button type="button" onclick="showDate();">获取日期</button>
+						<button type="button" onclick="showTime();">获取时间 </button>
+					</div>
 				</div>
 			</div>
 		</div>
-		-->
+
 		<script src="js/mui.min.js"></script>
 		<script src="js/mui.picker.min.js"></script>
 		<script src="js/iconfont.js"></script>
-		<script src="js/utilComm.js"></script>		
+		<script src="js/utilComm.js"></script>
+		<script src="js/md5.js"></script>
+		
+
+		
+		<!-- 		<script>
+			import md5 from 'js/md5.js'
+		</script> -->
 		<script src="js/LoginUser.js"></script>
 	</body>
+	<script type="text/javascript">
+		function showDate() {
+			var dDate = new Date();
+			// dDate.setFullYear(2018, 3, 8);
+			var minDate = new Date();
+			minDate.setFullYear(2010, 1, 1);
+			var maxDate = new Date();
+			maxDate.setFullYear(2020, 12, 31);
 
+			plus.nativeUI.pickDate(
+				function(e) {
+					var d = e.date;
+					mui.toast('您选择的日期是：' + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate());
+				},
+				function(e) {
+					mui.toast('您没有选择');
+				}, {
+					title: '请选择日期',
+					date: dDate,
+					minDate: minDate,
+					maxDate: maxDate
+				}
+			);
+		}
+
+		function showTime() {
+			var myDate = new Date();
+			var h = myDate.getHours();
+			var min = myDate.getMinutes();
+			var dTime = new Date();
+			dTime.setHours(h, min);
+
+			plus.nativeUI.pickTime(function(e) {
+				var d = e.date;
+				mui.toast("您选择的时间是：" + d.getHours() + ":" + d.getMinutes());
+			}, function(e) {
+				mui.toast("您没有选择时间");
+			}, {
+				title: "请选择时间",
+				is24Hour: true,
+				time: dTime
+			});
+		}
+	</script>
 </html>

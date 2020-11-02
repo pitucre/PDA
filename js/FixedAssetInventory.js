@@ -200,7 +200,7 @@ var JQ = jQuery.noConflict();
 						var month = myDate.getMonth() + 1;
 
 						//获取当前日
-						var day = myDate.getDate();
+						var day = myDate.getDay();
 						var h = myDate.getHours(); //获取当前小时数(0-23)
 						var m = myDate.getMinutes(); //获取当前分钟数(0-59)
 						var s = myDate.getSeconds();
