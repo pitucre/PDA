@@ -1,6 +1,7 @@
 var storage = window.localStorage;
 var JQ = jQuery.noConflict();
-
+var _selBARCODE = mui("#selBARCODE")[0];
+var tr;
 (function($) {
 	$.init();
 	mui("#lblUser")[0].innerText = storage["NAME"];
@@ -8,6 +9,32 @@ var JQ = jQuery.noConflict();
 	var _selBARCODE = mui("#selBARCODE")[0];
 	var tr;
 	_selBARCODE.focus();
+	/*
+	 * 条码扫描事件
+	 */
+	_selBARCODE.addEventListener("tap", function() {
+		var filters = [plus.barcode.QR, plus.barcode.CODE128, plus.barcode.CODE39, plus.barcode.CODE93];
+		mui("#scanContainer")[0].style.display = "block";
+		barScan = new plus.barcode.Barcode("scanContainer", filters);
+		barScan.start({
+			conserve: false,
+			filename: "_doc/barcode/"
+		});
+		barScan.setFlash(true);
+		barScan.onmarked = function(type, code, file) {
+			// OnScanningLoadClick(code);
+			// alert(code);
+			_selBARCODE.value = code;
+
+			barScan.close();
+			mui("#scanContainer")[0].style.display = "none";
+			
+			OnScanningLoadClick();
+		};
+		barScan.onerror = function() {
+			mui.alert("Scanning Bar Code Failure!");
+		}
+	}, false);
 	_selBARCODE.addEventListener("keyup", function() {
 		if (13 == event.keyCode || 0 == event.keyCode) {
 
@@ -16,29 +43,29 @@ var JQ = jQuery.noConflict();
 			mui("#txtAssetBarcode")[0].value = _selBARCODE.value;
 
 			if (_selBARCODE.value.length == 9) {
+				/*
+								// console.log("test");
+								// mui.getJSON('FixedAssetInfo.txt', null, function(dt) {
 
-				// console.log("test");
-				// mui.getJSON('FixedAssetInfo.txt', null, function(dt) {
+								// 	console.log(dt);
+								// });
 
-				// 	console.log(dt);
-				// });
+								// $.ajax({
+								// 	url: "_doc\FixedAssetInfo.txt",
+								// 	success: function(data, status) {
+								// 		// console.log(arguments)
+								// 		console.log(data)
+								// 	},
+								// 	error: function(data, status) {
+								// 		// console.log(arguments)
+								// 	}
+								// });
 
-				// $.ajax({
-				// 	url: "_doc\FixedAssetInfo.txt",
-				// 	success: function(data, status) {
-				// 		// console.log(arguments)
-				// 		console.log(data)
-				// 	},
-				// 	error: function(data, status) {
-				// 		// console.log(arguments)
-				// 	}
-				// });
+								// var temp=GetHeader('FixedAssetInfo.json');
+								// console.log(temp);
+								// plus.io.getFileInfo('_doc\FixedAssetInfo.txt',function(fs){})
 
-				// var temp=GetHeader('FixedAssetInfo.json');
-				// console.log(temp);
-				// plus.io.getFileInfo('_doc\FixedAssetInfo.txt',function(fs){})
-
-
+				*/
 				plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
 					// fs.root是根目录操作对象DirectoryEntry
 					fs.root.getFile('_doc\FixedAssetInfo.txt', {
@@ -200,7 +227,7 @@ var JQ = jQuery.noConflict();
 						var month = myDate.getMonth() + 1;
 
 						//获取当前日
-						var day = myDate.getDay();
+						var day = myDate.getDate();
 						var h = myDate.getHours(); //获取当前小时数(0-23)
 						var m = myDate.getMinutes(); //获取当前分钟数(0-59)
 						var s = myDate.getSeconds();
@@ -326,7 +353,8 @@ var JQ = jQuery.noConflict();
 						var now = new Date().Format("yyyyMMdd HH:mm:ss");
 						console.log(now);
 						var scanResult =
-							mui("#txtAssetBarcode")[0].value + "|" + mui("#txtAssetCode")[0].value + "|" + "1" + "|" + "wrong" + "|" +
+							mui("#txtAssetBarcode")[0].value + "|" + mui("#txtAssetCode")[0].value + "|" + "1" + "|" + "wrong" +
+							"|" +
 							storage["LOGINNAME"] + "|" + now + "\r\n";
 						writer.write(scanResult);
 						mui("#txtAssetBarcode")[0].value = ""
@@ -403,6 +431,80 @@ Date.prototype.Format = function(fmt) {
 		if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[
 			k]).substr(("" + o[k]).length)));
 	return fmt;
+}
+
+function OnScanningLoadClick() {
+
+
+		OnCleanText();
+
+		mui("#txtAssetBarcode")[0].value = _selBARCODE.value;
+
+		if (_selBARCODE.value.length == 9) {
+
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fs.root.getFile('_doc\FixedAssetInfo.txt', {
+					create: false
+				}, function(fileEntry) {
+
+					try {
+						// myStorage=plus.storage;
+						console.log(_selBARCODE.value);
+						var barcodeJsonStr = myStorage.getItem(_selBARCODE.value);
+						// console.log(barcodeJsonStr);
+						if (barcodeJsonStr == null) {
+							mui("#selBARCODE")[0].value = "";
+							mui.alert("不存在此条形码！");
+						} else {
+							ScanBarcode = JSON.parse(barcodeJsonStr);
+
+							tr += '<tr height="30" bgcolor="#FFFFFF"><td>' + ScanBarcode.BARCODE + "</td><td>" + new Date().Format(
+								"yyyyMMdd HH:mm:ss"); +
+							"</td></tr>";
+							JQ("#dList").append(tr);
+
+							mui("#txtAssetBarcode")[0].value = ScanBarcode.BARCODE;
+							_selBARCODE.value = "";
+							mui("#txtAssetCode")[0].value = ScanBarcode.ASSETCODE;
+							mui("#txtAssetName")[0].value = ScanBarcode.ASSETNAME
+							mui("#txtAssetSpec")[0].value = ScanBarcode.GUIGEXINGHAO
+							mui("#txtAssetStatus")[0].value = ScanBarcode.ZICHANZHUANGTAI
+							mui("#txtAssetStatusName")[0].value = ScanBarcode.ZHUANGTAIMINGCHENG
+							mui("#txtAssetDepartment")[0].value = ScanBarcode.SHIYONGBUMEN
+							mui("#txtAssetDepartmentName")[0].value = ScanBarcode.SHIYONGBUMENNAME
+							mui("#txtAssetEmployee")[0].value = ScanBarcode.GUYUANBIANHAO
+
+							mui("#txtAssetEmployeeName")[0].value = ScanBarcode.GUYUANBIANHAONAME
+							if (ScanBarcode.GUYUANBIANHAONAME == null) mui("#txtAssetEmployeeName")[0].value = "未找到"
+							mui("#txtAssetEquipID")[0].value = ScanBarcode.ZICHANSHIBEIMA
+							if (ScanBarcode.ZICHANSHIBEIMA == "") mui("#txtAssetEquipID")[0].value = "未找到"
+							mui("#txtAssetNo")[0].value = ScanBarcode.XULIEHAO
+							if (ScanBarcode.XULIEHAO == "") {
+								mui("#txtAssetNo")[0].value = "未找到"
+
+								JQ("#txtAssetNo").append('style="color:#6699ee;background-color:#F9FFED');
+							}
+
+						}
+						// console.log(myStorage.getItem(_selBARCODE.value));
+					} catch (e) {
+						OnCleanText();
+						mui.alert(e.message);
+					}
+				}, function(e) {
+					mui.alert(e.message + "," + "因为你没有下载相关文件,请下载资产列表!");
+				});
+			}, function(e) {
+				mui.alert(e.message + " " + "文件不存在!");
+			});
+			// **/
+		} else {
+			// console.log(index);
+			mui.alert("条码长度不对", "Message")
+		}
+	
+	_selBARCODE.focus();
 }
 // function GetHeader(src) {
 // var ForReading=1;

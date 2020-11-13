@@ -27,10 +27,12 @@
 			<h1 class="mui-title"><label id="lblTitle">成品盘点</label></h1>
 		</header>
 		<div class="mui-content">
+			<div id="scanContainer" style="width:100%; height:100%; margin: auto; top:0; left: 0; position: fixed; display: none; z-index: 10;"></div>
 			<div class="mui-content-padded">
 				<div class="mui-input-group">
 					<div class="mui-input-row">
-						<input type="text" id='selBARCODE' placeholder="扫描条码... "  />
+						<input type="text" id='selBARCODE' placeholder="点击扫描条码... " />
+						<img id='imgBarcode' href="/images/iconfont-tianjia.png" />
 					</div>
 					<div class="mui-input-row">
 						<label id="lblAssetBarcode">资产条码:</label>
