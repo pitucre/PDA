@@ -81,15 +81,19 @@
 		<script src="js/iconfont.js"></script>
 		<script src="js/utilComm.js"></script>
 		<script src="js/md5.js"></script>
-		
 
-		
+
+
 		<!-- 		<script>
 			import md5 from 'js/md5.js'
 		</script> -->
 		<script src="js/LoginUser.js"></script>
 	</body>
 	<script type="text/javascript">
+		mui.plusReady(function() {
+			plus.screen.lockOrientation("portrait-primary"); //锁定竖屏翻转 默认不会还原
+		});
+
 		function showDate() {
 			var dDate = new Date();
 			// dDate.setFullYear(2018, 3, 8);

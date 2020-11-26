@@ -5,11 +5,13 @@ var db;
 (function($, doc) {
 	// <script src="js/mui.min.js"></script>
 	$.init({
-		statusBarBackground: "#f7f7f7",
+		statusBarBackground: "#f7f7f7"
+
 	});
 	// storage["Language"] = mui("#txtLanguage")[0].value;
 	mui("#lblServe")[0].innerText = requestPath;
 	$.plusReady(function() {
+		plus.screen.lockOrientation("portrait-secondary");//锁定竖屏翻转 默认不会还原
 		storage.clear();
 		if (plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
 			mui.alert("请检查网络是否正常连接！", "NetWorkError");
@@ -145,24 +147,29 @@ var db;
 			var pss = mui("#password")[0].value;
 			var md5_pass = (md5(pss)).toUpperCase();
 			// md5()
-			console.log(md5_pass);
+			// console.log(md5_pass);
+			window.location.replace("Main.html");
+			/*
 			if (OnCheckUser()) {
-
+				// window.location.replace("Main.html");
+			
 				if (mui("#txtModel")[0].value != "Online") {
 					// window.location.replace("Main.html");
 					plus.io.requestFileSystem(plus.io.PRIVATE_WWW, function(fs) {
 						// 可通过fs操作PRIVATE_WWW文件系统 
 						// ......
-						fs.root.getFile('_www/statics/UserPasswordInfo.txt', {
+						fs.root.getFile('_www/UserPasswordInfo.txt', {
 								create: false
 							},
 							function(entry) {
 								var fileReader = new plus.io.FileReader();
+								// alert(entry.fullPath);
+								// console.log(entry.fullPath);
 								if (entry.isFile) {
 									fileReader.readAsText(entry, "utf-8");
 									fileReader.onloadend = function(evt) {
 										var result = evt.target.result;
-										console.log(result);
+										// console.log(result);
 										console.log(result.indexOf(mui("#account")[0].value));
 										if (result.indexOf(logn) < 0) {
 											alert("用户" + logn + "没有权限!");
@@ -172,6 +179,7 @@ var db;
 											} else {
 												if (result.indexOf(logn) + logn.length + 1 == result.indexOf(md5_pass)) {
 													window.location.replace("Main.html");
+
 												} else {
 													alert("用户不存在或者密码不正确!!");
 												}
@@ -184,7 +192,7 @@ var db;
 
 							},
 							function(e) {
-								alert(e.message);
+								alert(e.message + "Error 1");
 							}
 						)
 					}, function(e) {
@@ -192,50 +200,10 @@ var db;
 					});
 
 				} else {
-					/*	
-							mui.ajax(requestPath + "/ashx/Login.ashx", {
-								data: {
-									ln: logn,
-									Ver: mui("#lblVer")[0].innerText,
-									Server: mui("#lblServe")[0].innerText,
-									EqNo: storage["MAC"],
-									ps: pss,
-									EqNm: plus.device.model,
-									action: "login",
-									lang: "CHN"
-								},
-								dataType: "json",
-								type: "post",
-								timeout: 100000,
-								success: function(json) {
-									if(json.ErrCode == "0") {
-										if(json.Info.LOGINNAME != "" || json.Info.LOGINNAME != null) {
-											storage["DEPNAM"] = json.Info.DEPNAM;
-											storage["NAME"] = json.Info.NAME;
-											storage["LOGINNAME"] = json.Info.LOGINNAME;
-											storage["POSNAM"] = json.Info.POSNAM;
-											storage["ID"] = json.Info.ID;
-											storage["Token"] = json.Info.Token;
-											mui("#account")[0].value = "";
-											mui("#password")[0].value = "";
-											// storage["Language"] = mui("#txtLanguage")[0].value;
-											window.location.replace("Main.html");
-										} else {
-											mui.alert("用户登录失败，不存在此用户信息。");
-										}
-									} else {
-										mui.alert(json.Error);
-									}
-								},
-								error: function(XMLHttpRequest, textStatus, errorThrown) {
-									mui.alert(errorThrown, "SystemError");
-								}
-							});
-					*/
-
 				}
 
 			}
+		*/
 		});
 
 	});

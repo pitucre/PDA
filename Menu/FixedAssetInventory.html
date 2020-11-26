@@ -20,6 +20,14 @@
 		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
 		<link rel="stylesheet" href="../css/comStyle.css" />
 	</head>
+	<style>
+		#video {
+			transform: rotateY(180deg);
+			-webkit-transform: rotateY(180deg);
+			/* Safari 和 Chrome */
+			-moz-transform: rotateY(180deg);
+		}
+	</style>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
@@ -27,7 +35,15 @@
 			<h1 class="mui-title"><label id="lblTitle">成品盘点</label></h1>
 		</header>
 		<div class="mui-content">
-			<div id="scanContainer" style="width:100%; height:100%; margin: auto; top:0; left: 0; position: fixed; display: none; z-index: 10;"></div>
+			<div id="scanContainer" style="width:100%; height:100%; margin: auto; top:0; left: 0;
+			 position: fixed; display: none; z-index: 10;">
+				<div style="margin: auto;margin-bottom: 50px; ">
+					<video id="video" width="100%" height="100%" style="border: 0px solid red;margin: auto;"></video>
+					<canvas id='canvas' width="100%" height="100px" style="display: none;"></canvas>
+					<!--<img id='img' src=''>-->
+				</div>
+			</div>
+
 			<div class="mui-content-padded">
 				<div class="mui-input-group">
 					<div class="mui-input-row">
@@ -36,12 +52,12 @@
 					</div>
 					<div class="mui-input-row">
 						<label id="lblAssetBarcode">资产条码:</label>
-						<input type="text" id="txtAssetBarcode"   readonly="readonly" class="mui-input" style="font-weight:bold;" />
+						<input type="text" id="txtAssetBarcode" readonly="readonly" class="mui-input" style="font-weight:bold;" />
 					</div>
 
 					<div class="mui-input-row">
 						<label id="lblAssetCode">资产编码:</label>
-						<input type="text" id="txtAssetCode"  readonly="readonly" class="mui-input" />
+						<input type="text" id="txtAssetCode" readonly="readonly" class="mui-input" />
 					</div>
 					<div class="mui-input-row">
 						<label id="lblAssetName">资产名称:</label>
@@ -63,7 +79,7 @@
 						<label id="lblAssetDepartment">使用部门:</label>
 						<input type="text" id="txtAssetDepartment" readonly="readonly" class="mui-input" />
 					</div>
-					<div class="mui-input-row" >
+					<div class="mui-input-row">
 						<label id="lblAssetDepartmentName">使用部门:</label>
 						<input type="text" id="txtAssetDepartmentName" readonly="readonly" class="mui-input" />
 					</div>
@@ -92,7 +108,7 @@
 				</div>
 				<h4><label id="lblmingxi">盘点条码明细:</label></h4>
 				<div class="mui-input-row" style="height: 250px;overflow:auto; text-align:center;">
-					<input  id="txtBARCODE" hidden="true" />
+					<input id="txtBARCODE" hidden="true" />
 					<table border="1" class="table" id="dList">
 						<tr align="center" height="35" bgcolor="#007aff" style="color:#FFFFFF;font-weight:bold;">
 							<td>
@@ -105,7 +121,7 @@
 					</table>
 				</div>
 				<br />
-<!-- 				<div style="text-align: center;">
+				<!-- 				<div style="text-align: center;">
 					<button type="button" class="mui-btn mui-btn-danger mui-action-back"><label id="lblBack">返回</label></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button id="btnAdd" type="button" class="mui-btn mui-btn-primary"><label id="lblOK">确定</label></button>
 				</div> -->
@@ -128,4 +144,5 @@
 	<script src="../js/utilComm.js"></script>
 	<script src="../js/mystorage.js"></script>
 	<script src="../js/FixedAssetInventory.js"></script>
+
 </html>

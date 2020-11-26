@@ -2,6 +2,7 @@ var storage = window.localStorage;
 var JQ = jQuery.noConflict();
 var _selBARCODE = mui("#selBARCODE")[0];
 var tr;
+
 (function($) {
 	$.init();
 	mui("#lblUser")[0].innerText = storage["NAME"];
@@ -14,12 +15,14 @@ var tr;
 	 */
 	_selBARCODE.addEventListener("tap", function() {
 		var filters = [plus.barcode.QR, plus.barcode.CODE128, plus.barcode.CODE39, plus.barcode.CODE93];
+		plus.screen.unlockOrientation("portrait-secondary");
 		mui("#scanContainer")[0].style.display = "block";
 		barScan = new plus.barcode.Barcode("scanContainer", filters);
 		barScan.start({
 			conserve: false,
 			filename: "_doc/barcode/"
 		});
+		plus.screen.lockOrientation("portrait-secondary"); //锁定竖屏翻转 默认不会还原
 		barScan.setFlash(true);
 		barScan.onmarked = function(type, code, file) {
 			// OnScanningLoadClick(code);
@@ -27,6 +30,7 @@ var tr;
 			_selBARCODE.value = code;
 
 			barScan.close();
+			plus.screen.lockOrientation("portrait-primary"); 
 			mui("#scanContainer")[0].style.display = "none";
 			
 			OnScanningLoadClick();
